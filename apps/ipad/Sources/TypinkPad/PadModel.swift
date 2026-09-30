@@ -178,9 +178,16 @@ final class PadModel {
 
   /// Manual address or a scanned pairing QR code.
   func connect(host: String, port: Int, code: String? = nil) {
+    let host = host.trimmingCharacters(in: .whitespacesAndNewlines)
+    // IPv6 addresses need brackets in a URL.
+    let urlHost = host.contains(":") && !host.hasPrefix("[") ? "[\(host)]" : host
+    guard !host.isEmpty, (1...65535).contains(port), let url = URL(string: "ws://\(urlHost):\(port)/"), url.host != nil else {
+      lastError = "“\(host)” doesn’t look like an address. Use your Mac’s name, like MacBook-Air.local, or its IP address."
+      return
+    }
     stopReconnecting()
     pendingCode = code
-    attempt(NWEndpoint.url(URL(string: "ws://\(host):\(port)")!), name: host, quietly: false)
+    attempt(NWEndpoint.url(url), name: host, quietly: false)
   }
 
   func connect(link: PairingLink) {

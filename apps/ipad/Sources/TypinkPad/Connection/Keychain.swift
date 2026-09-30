@@ -31,7 +31,7 @@ enum Keychain {
     let status = SecItemAdd(item as CFDictionary, nil)
     if status != errSecSuccess {
       // e.g. -34018 when the app isn't code-signed (unsigned Simulator builds).
-      print("[keychain] could not store the pairing token: \(status)")
+      Log.keychain.error("Could not store the pairing token: \(status)")
     }
   }
 

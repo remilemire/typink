@@ -54,7 +54,9 @@ final class CanvasController: UIViewController, PKCanvasViewDelegate {
     #if targetEnvironment(simulator)
       canvas.drawingPolicy = .anyInput
     #else
-      canvas.drawingPolicy = .pencilOnly // palm rejection; fingers scroll and zoom
+      // Follows Settings › Apple Pencil › Only Draw with Apple Pencil: with a Pencil, fingers
+      // scroll and zoom (palm rejection); without one, a finger can draw.
+      canvas.drawingPolicy = .default
     #endif
     canvas.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(canvas)

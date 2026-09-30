@@ -1,0 +1,9 @@
+// Signing for device builds, TestFlight and the App Store.
+//
+// Your Apple Developer Team ID goes in Signing.local.xcconfig next to this file (not in git,
+// since every contributor signs with their own team):
+//
+//   DEVELOPMENT_TEAM = ABCDE12345
+//
+// Simulator builds don't need it.
+#include? "Signing.local.xcconfig"

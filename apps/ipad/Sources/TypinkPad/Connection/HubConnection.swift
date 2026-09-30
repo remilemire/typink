@@ -192,7 +192,7 @@ final class HubConnection {
         break
       }
     } catch {
-      print("[hub] could not decode a message: \(error)")
+      Log.hub.error("Could not decode a message from the Mac: \(error.localizedDescription, privacy: .public)")
     }
   }
 }
