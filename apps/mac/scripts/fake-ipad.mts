@@ -81,17 +81,26 @@ export class FakeIpad {
       this.ws.once('open', () => resolve());
       this.ws.once('error', reject);
     });
+    // The Mac answers some messages back to back (paired, then welcome); when they arrive in
+    // one read, the second is already in `received` before we start waiting for it.
+    const mark = this.received.length;
     this.send({ t: 'hello', proto: 1, deviceId: this.state.deviceId, name: 'Fake iPad', token: this.state.token, appearance: 'light' });
-    const reply = await this.next((m) => m.t === 'welcome' || m.t === 'pairNeeded');
+    const reply = await this.nextSince(mark, (m) => m.t === 'welcome' || m.t === 'pairNeeded');
     if (reply.t === 'pairNeeded') {
       const code = typeof this.opts.code === 'function' ? await this.opts.code() : (this.opts.code ?? (await ask('Pairing code shown on the Mac: ')));
       this.send({ t: 'pair', code });
-      const result = await this.next((m) => m.t === 'paired' || m.t === 'pairFailed');
+      const result = await this.nextSince(mark, (m) => m.t === 'paired' || m.t === 'pairFailed');
       if (result.t === 'pairFailed') throw new Error(result.reason);
       this.state.token = result.token;
       fs.writeFileSync(this.stateFile, JSON.stringify(this.state));
-      await this.next((m) => m.t === 'welcome');
+      await this.nextSince(mark, (m) => m.t === 'welcome');
     }
+  }
+
+  /** Like next(), but a matching message that arrived after received[since] counts too. */
+  nextSince(since: number, match: (m: Msg) => boolean, timeoutMs?: number): Promise<Msg> {
+    const found = this.received.slice(since).find(match);
+    return found ? Promise.resolve(found) : this.next(match, timeoutMs);
   }
 
   send(msg: Msg, payload?: Uint8Array): void {

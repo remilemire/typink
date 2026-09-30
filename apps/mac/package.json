@@ -1,6 +1,7 @@
 {
   "name": "@typink/mac",
-  "version": "0.1.0",
+  "productName": "Typink",
+  "version": "1.0.0",
   "private": true,
   "description": "Typink: Typst notes with Apple Pencil ink from your iPad",
   "main": "./out/main/index.js",
@@ -11,11 +12,13 @@
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "test": "vitest run",
     "fake-ipad": "node scripts/fake-ipad.mts",
-    "dist": "electron-vite build && electron-builder --mac --dir",
-    "e2e": "electron-vite build && node e2e/run.mts"
+    "dist": "electron-vite build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --dir",
+    "e2e": "electron-vite build && node e2e/run.mts",
+    "smoke": "node e2e/packaged.mts"
   },
   "dependencies": {
     "@myriaddreamin/typst-ts-node-compiler": "0.7.0",
+    "electron-updater": "6.8.9",
     "ws": "8.22.0"
   },
   "devDependencies": {

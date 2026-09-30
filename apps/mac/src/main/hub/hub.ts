@@ -34,7 +34,8 @@ const ADVERTISE_SCRIPT = [
   'exec 3<&0',
   '/usr/bin/dns-sd -R "$@" >/dev/null & pid=$!',
   '(read -r _ <&3; kill $pid 2>/dev/null) & watchdog=$!',
-  'wait $pid',
+  // Quiet: no "Terminated" notice when the watchdog stops dns-sd.
+  'wait $pid 2>/dev/null',
   'kill $watchdog 2>/dev/null',
 ].join('\n');
 /** Layout revisions count up from the clock, so they keep increasing across restarts and a

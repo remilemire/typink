@@ -1,6 +1,10 @@
-import { Menu, type MenuItemConstructorOptions, shell } from 'electron';
+import { app as electronApp, Menu, type MenuItemConstructorOptions, shell } from 'electron';
 import type { AppearanceSetting, FormatAction, RendererCommand } from '@shared/types';
+import { logFilePath } from './log';
 import type { Typink } from './typink';
+import { updateMenuItem } from './updates';
+
+const REPO = 'https://github.com/remilemire/typink';
 
 export function installMenu(app: Typink): void {
   const run = (cmd: RendererCommand) => () => app.command(cmd);
@@ -13,8 +17,24 @@ export function installMenu(app: Typink): void {
     click: () => app.updateSettings({ appearance: value }),
   });
 
+  const devTools = !electronApp.isPackaged || process.env.TYPINK_DEVTOOLS === '1';
+
   const template: MenuItemConstructorOptions[] = [
-    { role: 'appMenu' },
+    {
+      role: 'appMenu',
+      submenu: [
+        { role: 'about' },
+        updateMenuItem(),
+        { type: 'separator' },
+        { role: 'services' },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideOthers' },
+        { role: 'unhide' },
+        { type: 'separator' },
+        { role: 'quit' },
+      ],
+    },
     {
       label: 'File',
       submenu: [
@@ -100,14 +120,19 @@ export function installMenu(app: Typink): void {
           click: (item) => app.updateSettings({ paperFollowsTheme: item.checked }),
         },
         { label: 'iPad…', accelerator: 'CmdOrCtrl+Shift+K', click: run({ type: 'show-devices' }) },
-        { type: 'separator' },
-        { role: 'toggleDevTools' },
+        ...(devTools ? [{ type: 'separator' } as const, { role: 'toggleDevTools' } as const] : []),
       ],
     },
     { role: 'windowMenu' },
     {
       role: 'help',
-      submenu: [{ label: 'Typst Documentation', click: () => shell.openExternal('https://typst.app/docs/') }],
+      submenu: [
+        { label: 'Typst Documentation', click: () => shell.openExternal('https://typst.app/docs/') },
+        { label: 'Typink on GitHub', click: () => shell.openExternal(REPO) },
+        { type: 'separator' },
+        { label: 'Report a Problem…', click: () => shell.openExternal(`${REPO}/issues/new`) },
+        { label: 'Show Logs in Finder', click: () => shell.showItemInFolder(logFilePath()) },
+      ],
     },
   ];
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));

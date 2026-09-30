@@ -1,5 +1,8 @@
 appId: app.typink.mac
 productName: Typink
+copyright: Copyright © 2026 Rémi Lemire
+# The build number (CFBundleVersion); scripts/bump-version.mts keeps it in step with the iPad app.
+buildVersion: "1"
 directories:
   output: release
   buildResources: build
@@ -10,15 +13,46 @@ files:
 asarUnpack:
   - '**/*.node'
   - '**/node_modules/@myriaddreamin/**'
+# Security switches baked into the Electron binary. The renderer loads module scripts from
+# file://, which needs grantFileProtocolExtraPrivileges; there are no cookies to encrypt.
+electronFuses:
+  runAsNode: false
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true
+  enableCookieEncryption: false
+  grantFileProtocolExtraPrivileges: true
+  # Flipping fuses edits the binary; re-sign ad hoc so unsigned local builds still launch.
+  resetAdHocDarwinSignature: true
 mac:
   category: public.app-category.productivity
+  # An Icon Composer bundle (scripts/icon/make-icon.mts), compiled by actool for macOS 26+
+  # with an .icns fallback for older versions.
+  icon: icon.icon
+  artifactName: ${productName}-${version}-${arch}.${ext}
   target:
     - target: dmg
       arch: [arm64]
+    # Squirrel.Mac updates from the zip.
+    - target: zip
+      arch: [arm64]
+  hardenedRuntime: true
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.inherit.plist
   extendInfo:
     NSLocalNetworkUsageDescription: Typink talks to the Typink app on your iPad over your local network.
     NSBonjourServices:
       - _typink._tcp
-  # Set CSC_NAME / an Apple Development identity to sign; unsigned builds work locally.
-  identity: null
+dmg:
+  # A stable name, so …/releases/latest/download/Typink-arm64.dmg always points at the newest.
+  artifactName: ${productName}-${arch}.${ext}
+  sign: true
+  # The DMG is notarized and stapled after the build; the updater only reads the zip.
+  writeUpdateInfo: false
+publish:
+  provider: github
+  owner: remilemire
+  repo: typink
+  releaseType: release
 npmRebuild: false

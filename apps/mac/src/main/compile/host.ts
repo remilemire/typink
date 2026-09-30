@@ -27,8 +27,18 @@ export class CompileHost {
 
   start(): void {
     this.stopped = false;
-    const child = utilityProcess.fork(enginePath, [], { serviceName: 'Typst compiler', stdio: 'inherit' });
+    const child = utilityProcess.fork(enginePath, [], { serviceName: 'Typst compiler', stdio: 'pipe' });
     this.child = child;
+    // The compiler's own output goes to the app log (see log.ts).
+    for (const [stream, print] of [
+      [child.stdout, console.log],
+      [child.stderr, console.warn],
+    ] as const) {
+      stream?.setEncoding('utf8');
+      stream?.on('data', (text: string) => {
+        for (const line of text.split('\n')) if (line.trim()) print('[typst]', line);
+      });
+    }
     this.ready = false;
     child.on('message', (msg: EngineResponse) => this.onMessage(msg));
     child.on('exit', (code) => this.onExit(child, code));
