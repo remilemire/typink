@@ -1,0 +1,23 @@
+{
+  "t": "sketchOpen",
+  "note": "Physics/Lecture 3.typ",
+  "id": "s7k2m9q4",
+  "rev": 3,
+  "size": {
+    "w": 470.55,
+    "h": 115.5
+  },
+  "ruling": {
+    "template": "lined",
+    "pitch": 19.25,
+    "offsetX": 0,
+    "offsetY": 13.86
+  },
+  "background": null,
+  "parts": {
+    "pk": [
+      0,
+      1024
+    ]
+  }
+}

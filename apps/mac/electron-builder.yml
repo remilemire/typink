@@ -1,0 +1,24 @@
+appId: app.typink.mac
+productName: Typink
+directories:
+  output: release
+  buildResources: build
+files:
+  - out/**
+  - package.json
+# Native modules (the Typst compiler) must live outside the asar archive.
+asarUnpack:
+  - '**/*.node'
+  - '**/node_modules/@myriaddreamin/**'
+mac:
+  category: public.app-category.productivity
+  target:
+    - target: dmg
+      arch: [arm64]
+  extendInfo:
+    NSLocalNetworkUsageDescription: Typink talks to the Typink app on your iPad over your local network.
+    NSBonjourServices:
+      - _typink._tcp
+  # Set CSC_NAME / an Apple Development identity to sign; unsigned builds work locally.
+  identity: null
+npmRebuild: false

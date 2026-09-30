@@ -1,0 +1,30 @@
+{
+  "t": "note",
+  "note": "Physics/Lecture 3.typ",
+  "title": "Lecture 3",
+  "rev": 12,
+  "following": true,
+  "pages": [
+    {
+      "w": 595.28,
+      "h": 841.89
+    }
+  ],
+  "sketches": [
+    {
+      "id": "s7k2m9q4",
+      "page": 1,
+      "x": 62.36,
+      "y": 326.19,
+      "w": 470.56,
+      "h": 141.17,
+      "on": null
+    }
+  ],
+  "ruling": {
+    "template": "lined",
+    "pitch": 19.25,
+    "offsetX": 0,
+    "offsetY": 13.86
+  }
+}

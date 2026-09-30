@@ -1,0 +1,19 @@
+{
+  "t": "annotations",
+  "note": "Physics/Lecture 3.typ",
+  "rev": 12,
+  "clusters": [
+    {
+      "id": "c1",
+      "page": 1,
+      "x": 300,
+      "y": 120,
+      "w": 90,
+      "h": 30,
+      "pk": [
+        0,
+        512
+      ]
+    }
+  ]
+}

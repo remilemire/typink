@@ -1,0 +1,45 @@
+{
+  "t": "annotatePut",
+  "note": "Physics/Lecture 3.typ",
+  "viewedRev": 12,
+  "pages": [
+    1
+  ],
+  "clusters": [
+    {
+      "id": "c1",
+      "page": 1,
+      "bbox": [
+        300,
+        120,
+        90,
+        30
+      ],
+      "render": [
+        {
+          "ink": "pen",
+          "color": "#1d1d1fff",
+          "colorDark": "#e5e5e7ff",
+          "points": [
+            10,
+            12,
+            1.8,
+            1,
+            14.5,
+            13.2,
+            2.1,
+            1,
+            19,
+            15,
+            2.2,
+            1
+          ]
+        }
+      ],
+      "pk": [
+        0,
+        512
+      ]
+    }
+  ]
+}

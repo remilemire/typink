@@ -1,0 +1,53 @@
+# Generate the Xcode project with:  xcodegen generate   (brew install xcodegen)
+name: TypinkPad
+options:
+  bundleIdPrefix: app.typink
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+packages:
+  TypinkPadCore:
+    path: .
+targets:
+  TypinkPad:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources/TypinkPad
+    dependencies:
+      - package: TypinkPadCore
+    info:
+      path: Sources/TypinkPad/Info.plist
+      properties:
+        CFBundleDisplayName: Typink
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UIRequiresFullScreen: false
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSLocalNetworkUsageDescription: Typink connects to the Typink app on your Mac over your local network to show your notes and send your drawings.
+        NSBonjourServices:
+          - _typink._tcp
+        NSCameraUsageDescription: Typink uses the camera to scan the pairing code on your Mac and to take photos for your notes.
+        # typink://pair?… links (the Mac's pairing QR code) open the app, so the Camera app can pair too.
+        CFBundleURLTypes:
+          - CFBundleURLName: app.typink.pad
+            CFBundleURLSchemes:
+              - typink
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.typink.pad
+        TARGETED_DEVICE_FAMILY: "2"
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: "1"
+        # Swift 5 language mode: Apple frameworks still have rough concurrency annotations.
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_PREVIEWS: YES
+        GENERATE_INFOPLIST_FILE: NO
