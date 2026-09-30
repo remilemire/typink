@@ -12,6 +12,17 @@ Typst notes on your Mac, with handwriting and diagrams from your iPad and Apple 
 Notes are plain `.typ` files in `~/Documents/Typink`, so they work with Git, iCloud Drive and the
 `typst` CLI.
 
+## Install
+
+- **Mac** (Apple Silicon, macOS 13 or later): download
+  [Typink-arm64.dmg](https://github.com/remilemire/typink/releases/latest/download/Typink-arm64.dmg),
+  open it and drag Typink into Applications. It keeps itself up to date.
+- **iPad** (iPadOS 18 or later): through TestFlight. The invite link will be posted here when the
+  beta opens.
+
+Then open Typink on both, and pair them (see [Pairing and use](#pairing-and-use)). Typink collects
+no data at all; see [PRIVACY.md](PRIVACY.md).
+
 ## Repository
 
 ```
@@ -31,8 +42,14 @@ pnpm install
 pnpm dev                          # run the app with hot reload
 pnpm test                         # unit tests (lib.typ on Typst 0.14 and 0.15, protocol, Mac logic)
 pnpm --filter @typink/mac e2e     # drives the real app + a simulated iPad
-pnpm --filter @typink/mac dist    # unsigned Typink.app in apps/mac/release/
+pnpm --filter @typink/mac dist    # unsigned Typink.app in apps/mac/release/, for local testing
+pnpm --filter @typink/mac smoke   # checks that packaged app: a fake iPad gets a compiled note
+pnpm icon                         # regenerates the app icon for both apps
 ```
+
+Signed releases for both apps are made with `pnpm release:mac` and `pnpm release:ipad`; see
+[docs/releasing.md](docs/releasing.md). The app writes a log to `~/Library/Logs/Typink/main.log`
+(Help › Show Logs in Finder).
 
 The first launch creates `~/Documents/Typink` with a welcome note. **File › Choose Notes
 Folder…** points the app at another folder.
@@ -88,8 +105,10 @@ xcodegen generate                 # creates TypinkPad.xcodeproj from project.yml
 open TypinkPad.xcodeproj
 ```
 
-In Xcode, set your team under *Signing & Capabilities* (a free Apple ID works, but the app then
-has to be re-installed every 7 days), then run it on your iPad.
+To run it on your iPad, put your team in `apps/ipad/Config/Signing.local.xcconfig` (git ignores
+it): `DEVELOPMENT_TEAM = ABCDE12345`. The team set in Xcode's *Signing & Capabilities* is lost
+the next time `xcodegen generate` runs. A free Apple ID works too, but the app then has to be
+re-installed every 7 days. The Simulator needs no team.
 
 The platform-independent logic (protocol, ink conversion, clustering) builds and checks without
 Xcode:
@@ -141,3 +160,7 @@ changes your Mac's name on the network.
   anchor. The ink then re-attaches to the paragraph before it and never disappears.
 - Typed text sits on the ruling for everything `lib.typ` knows about. Hand-written Typst layout
   (custom blocks with odd spacing) can shift the lines below it.
+
+## License
+
+[MIT](LICENSE) © 2026 Rémi Lemire

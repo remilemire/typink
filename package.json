@@ -10,6 +10,9 @@
     "build": "pnpm --filter @typink/mac build",
     "test": "pnpm -r --if-present test",
     "typecheck": "pnpm -r --if-present typecheck",
-    "icon": "node --no-warnings scripts/icon/make-icon.mts"
+    "icon": "node --no-warnings scripts/icon/make-icon.mts",
+    "bump": "node --no-warnings scripts/bump-version.mts",
+    "release:mac": "node --no-warnings scripts/release-mac.mts",
+    "release:ipad": "scripts/release-ipad.sh"
   }
 }
