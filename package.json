@@ -9,6 +9,7 @@
     "dev": "pnpm --filter @typink/mac dev",
     "build": "pnpm --filter @typink/mac build",
     "test": "pnpm -r --if-present test",
-    "typecheck": "pnpm -r --if-present typecheck"
+    "typecheck": "pnpm -r --if-present typecheck",
+    "icon": "node --no-warnings scripts/icon/make-icon.mts"
   }
 }
